@@ -11,8 +11,8 @@
     "install:browsers": "npx playwright install"
 
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["playwright", "e2e", "automation", "typescript", "swag-labs"],
+  "author": "Aayush Raj Pokhrel",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
