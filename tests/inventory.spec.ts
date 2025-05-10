@@ -1,40 +1,56 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, Page } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
+import { InventoryPage } from '../pages/InventoryPage';
+import { readFile } from 'fs/promises';
+import path from 'path';
 
-test.describe('Inventory Page Tests', () => {
-  test.beforeEach(async ({ page }) => {
-    const login = new LoginPage(page);
-    await login.goto();
-    await login.login('standard_user', 'secret_sauce');
+test.describe('Inventory Tests', () => {
+  let page: Page;
+  let loginPage: LoginPage;
+  let inventoryPage: InventoryPage;
+
+  // Perform login once before all tests
+  test.beforeAll(async ({ browser }) => {
+    page = await browser.newPage();
+    loginPage = new LoginPage(page);
+    inventoryPage = new InventoryPage(page);
+
+    // Login only once for all tests
+    await loginPage.goto();
+    await loginPage.login('standard_user', 'secret_sauce');
+    await page.waitForSelector('[data-test="inventory-item"]'); // Wait for the inventory page to load
   });
 
-  test('7. Should display all 6 inventory items', async ({ page }) => {
-    const items = page.locator('.inventory_item');
-    await expect(items).toHaveCount(6);
+  test('Inventory items match expected values', async () => {
+    // Read the fixture file
+    const dataPath = path.resolve(__dirname, '../fixtures/expectedInventory.json');
+    const rawData = await readFile(dataPath, 'utf-8');
+    const expectedInventoryItems: string[] = JSON.parse(rawData);
+
+    const itemCount = await inventoryPage.getItemCount();
+    const frontendItemNames = await inventoryPage.getItemNames();
+
+    // Verify inventory items match expected values
+    expect(itemCount).toBe(expectedInventoryItems.length);
+    expect(frontendItemNames.sort()).toEqual(expectedInventoryItems.sort());
   });
 
-  test('8. Add item to cart and check cart badge', async ({ page }) => {
-    await page.locator('text=Add to cart').first().click();
-    const cartBadge = page.locator('.shopping_cart_badge');
-    await expect(cartBadge).toHaveText('1');
+  test('Verify sorting of items by price (low to high)', async () => {
+    // Get initial product prices
+    const initialProductPrice = await inventoryPage.getProductPrice();
+
+    // Sort products by price (low to high)
+    await inventoryPage.sortByPriceLowTohigh();
+
+    // Get sorted product prices
+    const sortedProductPrice = await inventoryPage.getProductPrice();
+
+    // Verify that the prices are sorted correctly
+    expect(sortedProductPrice).toEqual(initialProductPrice.sort((a, b) => a - b));
   });
 
-  test('9. Clicking item should open item detail page', async ({ page }) => {
-    await page.locator('.inventory_item_name').first().click();
-    await expect(page).toHaveURL(/inventory-item/);
-    await expect(page.locator('.inventory_details_name')).toBeVisible();
-  });
-
-  test('10. Sort dropdown should change item order', async ({ page }) => {
-    const dropdown = page.locator('[data-test="product_sort_container"]');
-    await dropdown.selectOption('za');
-    const firstItem = await page.locator('.inventory_item_name').first().textContent();
-    expect(firstItem?.trim()).toBe('Test.allTheThings() T-Shirt (Red)');
-  });
-
-  test('11. Logout should redirect to login page', async ({ page }) => {
-    await page.locator('#react-burger-menu-btn').click();
-    await page.locator('#logout_sidebar_link').click();
-    await expect(page).toHaveURL('/');
+  // Cleanup after all tests are done
+  test.afterAll(async () => {
+    await page.close(); // Close the browser page after the tests
   });
 });

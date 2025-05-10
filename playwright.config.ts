@@ -2,6 +2,7 @@
 import { defineConfig } from '@playwright/test';
 
 export default defineConfig({
+  workers: 5,
   use: {
     baseURL: 'https://www.saucedemo.com',
     headless: true,

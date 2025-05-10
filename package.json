@@ -1,11 +1,14 @@
 {
-  "name": "test",
+  "name": "playwright-e2e-automation",
   "version": "1.0.0",
-  "description": "",
+  "description": "End-to-end automation suite using Playwright with TypeScript for an e-commerce platform Swag Labs.",
   "main": "index.js",
   "scripts": {
-    "test" : "playwright test",
-    "report" : "playwright show-report"
+    "test": "npx playwright test",
+    "test:parallel": "npx playwright test --workers=4",
+    "test:debug": "npx playwright test --debug",
+    "report": "npx playwright show-report",
+    "install:browsers": "npx playwright install"
 
   },
   "keywords": [],
