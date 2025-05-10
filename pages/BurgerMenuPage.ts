@@ -17,5 +17,6 @@ export class BurgerMenuPage {
 
   async clickLogoutButton() {
     await getByDataTest(this.page,this.logoutButton).click();
+    
 }
 }
