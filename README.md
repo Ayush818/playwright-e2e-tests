@@ -96,7 +96,7 @@ npx playwright install
 ### 2. 🧪 Run all tests
 
 ```bash
-npx playwright test
+npm run test
 ```
 
 ### 3. ⚙️ Run tests in parallel
