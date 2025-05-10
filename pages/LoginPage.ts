@@ -1,10 +1,7 @@
-// pages/LoginPage.ts
 import { Page } from '@playwright/test';
 import { getByDataTest } from '../utils/selectors';
-import { get } from 'http';
 
 export class LoginPage {
-  // Define selectors as constants
   private usernameLocator = 'username';
   private passwordLocator = 'password';
   private loginButtonLocator = 'login-button';

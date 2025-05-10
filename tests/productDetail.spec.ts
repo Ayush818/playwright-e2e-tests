@@ -23,7 +23,6 @@ test('Navigate to product detail page and verify information', async ({ page }) 
   const actualTitle = await productDetailPage.getProductTitle();
   const actualDescription = await productDetailPage.getProductDescription();
   const actualPrice = await productDetailPage.getProductPrice();
-
   expect(actualTitle).toBe(expectedTitle);
   expect(actualDescription).toBe(expectedDescription);
   expect(actualPrice).toBe(expectedPrice);

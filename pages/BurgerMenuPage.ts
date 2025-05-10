@@ -1,10 +1,9 @@
-// pageObjects/BurgerMenuPage.ts
 import { Page } from '@playwright/test';
 import { getByDataTest } from '../utils/selectors';
 
 export class BurgerMenuPage {
   private burgerMenuButton = "open-menu"; 
-  private logoutButton = "logout-sidebar-link"; // Selector for logout button
+  private logoutButton = "logout-sidebar-link"; 
 
   constructor(private page: Page) {
   }

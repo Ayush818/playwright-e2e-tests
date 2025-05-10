@@ -1,8 +1,5 @@
-// pages/InventoryPage.ts
 import { Page, Locator, expect } from '@playwright/test';
 import { getByDataTest } from '../utils/selectors';
-import { get } from 'http';
-import { assert } from 'console';
 
 export class InventoryPage {
   

@@ -12,24 +12,19 @@ test.describe('Cart tests', () => {
     loginPage = new LoginPage(page);
     inventoryPage = new InventoryPage(page);
     cartPage = new CartPage(page);
-    // Login before each test
     await loginPage.goto();
     await loginPage.login('standard_user', 'secret_sauce');
   });
 
   test('Add to cart: item is added and visible in cart', async () => {
-    // Step 1: Add the first item to the cart
-    await inventoryPage.addItemToCart(0); // Sauce Labs Backpack
+    await inventoryPage.addItemToCart(0);   // Sauce Labs Backpack
 
-    // Step 2: Verify the button changed to 'Remove'
     const buttonText = await (await inventoryPage.getRemoveButton()).textContent();
     expect(buttonText).toBe('Remove');
 
-    // Step 3: Verify cart badge shows count = 1
     const cartCount = await inventoryPage.getCartBadgeCount();
     expect(cartCount).toBe(1);
 
-    // Step 4: Go to cart and verify the item name matches
     await cartPage.goto();
     const cartItems = await cartPage.getCartItemNames();
     expect(cartItems).toContain('Sauce Labs Backpack');
